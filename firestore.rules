@@ -1,0 +1,14 @@
+rules_version = '2';
+
+// Join has no per-user data separation: every signed-in user works on the same
+// shared contacts and tasks. Scoping documents to their owner would break the app,
+// so the boundary is simply "authenticated or not".
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Recursive wildcard also covers tasks/{id}/subtasks, tasks/{id}/assigns
+    // and the collection group query used by deleteContact().
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

@@ -1,6 +1,43 @@
 # Join
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.8.
+Kanban task manager built with Angular 20 and Firebase (Firestore + Authentication).
+
+> Forked from [FelixRabenholdDev/Join](https://github.com/FelixRabenholdDev/Join).
+> The UI and application logic are the original author's work.
+>
+> **My contribution to this fork:** migration to a standalone Firebase backend —
+> own Firestore database and Auth setup, Firestore security rules
+> ([`firestore.rules`](firestore.rules)), a reproducible seed script
+> ([`scripts/seed.mjs`](scripts/seed.mjs)) and the Firebase Hosting deployment.
+
+## Firebase setup
+
+The Firebase credentials live in [`src/app/app.config.ts`](src/app/app.config.ts).
+Web API keys are public by design — access is controlled by the security rules,
+not by keeping the keys secret.
+
+Required configuration in the Firebase console:
+
+- **Authentication** → enable both `Email/Password` and `Anonymous`
+  (the latter powers the guest login and the seed script)
+- **Firestore** → create the database, then publish `firestore.rules`
+- **Firestore** → create the document `appSettings/contacts` with the field
+  `lastUserColor` (type `number`, value `0`). The app updates this document on
+  signup and cannot create it itself.
+
+Fill an empty database with demo data:
+
+```bash
+npm run seed
+```
+
+## Deployment
+
+```bash
+firebase deploy --only firestore:rules
+npm run build
+firebase deploy --only hosting
+```
 
 ## Development server
 
